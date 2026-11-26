@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Trash2, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import hero from "@/assets/hero-market.jpg";
 import { useEntries, useProfile, summarize, money, today, daysAgo } from "@/lib/workproof";
 
 export const Route = createFileRoute("/")({
@@ -41,23 +42,27 @@ function Index() {
 
   return (
     <div className="min-h-screen">
-      <header className="bg-hero text-primary-foreground">
-        <div className="stripe-ticket h-2" />
-        <div className="mx-auto max-w-5xl px-5 py-10">
-          <p className="text-sm uppercase tracking-[0.2em] opacity-80">SDG 8 · SDG 10</p>
-          <h1 className="mt-2 font-display text-5xl font-extrabold">WorkProof</h1>
-          <p className="mt-3 max-w-xl text-lg opacity-90">No payslip? No problem. Log what you earn each day and print a one-page income statement for loans, rent or visas.</p>
-          <div className="mt-8 grid grid-cols-3 gap-3 max-w-xl">
-            <Stat label="Last 30 days" value={money(s30.total, profile.currency)} />
-            <Stat label="Days worked" value={String(s30.days)} />
-            <Stat label="Avg / work day" value={money(s30.avgPerWorkDay, profile.currency)} />
-          </div>
+      <header className="relative overflow-hidden text-primary-foreground">
+        <img src={hero} alt="A boda rider and a market trader at a busy market" width={1600} height={912} className="absolute inset-0 h-full w-full object-cover" />
+        <div className="absolute inset-0 bg-hero-overlay" />
+        <div className="relative mx-auto max-w-6xl px-5 pb-28 pt-8">
+          <nav className="flex items-center justify-between">
+            <span className="font-display text-2xl font-extrabold">Work<span className="text-accent">Proof</span></span>
+            <span className="rounded-full border border-primary-foreground/30 px-3 py-1 text-xs tracking-widest">SDG 8 · SDG 10</span>
+          </nav>
+          <h1 className="mt-16 max-w-2xl font-display text-5xl font-extrabold leading-[1.05] md:text-7xl animate-in fade-in slide-in-from-bottom-4 duration-700">Your hustle is <em className="text-accent not-italic">real work.</em></h1>
+          <p className="mt-5 max-w-lg text-lg opacity-90">No payslip? Log what you earn each day and print a one-page income statement for loans, rent or visas.</p>
         </div>
       </header>
+      <div className="relative mx-auto -mt-16 grid max-w-6xl grid-cols-3 gap-3 px-5">
+        <Stat label="Last 30 days" value={money(s30.total, profile.currency)} />
+        <Stat label="Days worked" value={String(s30.days)} />
+        <Stat label="Avg / work day" value={money(s30.avgPerWorkDay, profile.currency)} />
+      </div>
 
-      <main className="mx-auto grid max-w-5xl gap-6 px-5 py-8 md:grid-cols-[1fr_1.2fr]">
+      <main className="mx-auto grid max-w-6xl gap-6 px-5 py-8 md:grid-cols-[1fr_1.2fr]">
         <div className="space-y-6">
-          <form onSubmit={add} className="rounded-xl border bg-card p-5 shadow-card space-y-3">
+          <form onSubmit={add} className="rounded-2xl border bg-card p-6 shadow-card space-y-3">
             <h2 className="font-display text-2xl font-semibold">Log today's earnings</h2>
             <div className="grid grid-cols-2 gap-3">
               <Field label="Date"><Input type="date" value={date} max={today()} onChange={(e) => setDate(e.target.value)} /></Field>
@@ -72,7 +77,7 @@ function Index() {
             <Button type="submit" className="w-full" size="lg">Add entry</Button>
           </form>
 
-          <div className="rounded-xl border bg-card p-5 shadow-card space-y-3">
+          <div className="rounded-2xl border bg-card p-6 shadow-card space-y-3">
             <h2 className="font-display text-2xl font-semibold">Your details</h2>
             <p className="text-sm text-muted-foreground">Shown on your statement.</p>
             <Field label="Full name"><Input value={profile.name} onChange={(e) => setProfile({ ...profile, name: e.target.value })} placeholder="Amina Wanjiru" /></Field>
@@ -88,14 +93,14 @@ function Index() {
           </div>
         </div>
 
-        <section className="rounded-xl border bg-card p-5 shadow-card">
+        <section className="rounded-2xl border bg-card p-6 shadow-card">
           <h2 className="font-display text-2xl font-semibold">Earnings log</h2>
           {sorted.length === 0 ? (
             <p className="mt-6 rounded-lg bg-muted p-6 text-center text-muted-foreground">No entries yet. Add your first day's earnings — every day you log makes your record stronger.</p>
           ) : (
             <ul className="mt-4 divide-y">
               {sorted.map((e) => (
-                <li key={e.id} className="flex items-center gap-3 py-3">
+                <li key={e.id} className="flex items-center gap-3 rounded-lg px-2 py-3 transition-colors hover:bg-muted">
                   <div className="w-24 text-sm text-muted-foreground">{e.date}</div>
                   <div className="flex-1">
                     <div className="font-medium">{e.source}</div>
@@ -115,7 +120,7 @@ function Index() {
 }
 
 function Stat({ label, value }: { label: string; value: string }) {
-  return <div className="rounded-lg bg-primary-foreground/10 p-3"><div className="text-xs opacity-80">{label}</div><div className="font-display text-xl font-bold">{value}</div></div>;
+  return <div className="rounded-2xl border-t-4 border-accent bg-card p-5 shadow-card"><div className="text-xs uppercase tracking-wider text-muted-foreground">{label}</div><div className="mt-1 font-display text-2xl font-bold text-primary md:text-3xl">{value}</div></div>;
 }
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return <label className="block space-y-1 text-sm font-medium"><span>{label}</span>{children}</label>;
